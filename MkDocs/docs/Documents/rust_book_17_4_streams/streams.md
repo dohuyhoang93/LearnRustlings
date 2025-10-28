@@ -261,7 +261,7 @@ graph TD
     style A1 fill:#f9f,stroke:#333,stroke-width:2px
     style A2 fill:#f9f,stroke:#333,stroke-width:2px
     style G fill:#ffc,stroke:#333,stroke-width:4px
-    style I fill:#9f9,stroke:#333,stroke-width:2px
+    style I fill:#9af9,stroke:#333,stroke-width:2px
 
 ```
 
@@ -274,7 +274,7 @@ graph TD
 
   Luồng được hợp nhất (`merged`) là chuỗi các cuộc gọi mà nhân viên này xử lý.
 
-  1. Luôn lắng nghe cả hai nguồn cùng lúc
+## 1. Luôn lắng nghe cả hai nguồn cùng lúc
 
   Nhân viên trực tổng đài không bao giờ chỉ nghe một đường dây và bỏ mặc đường dây kia. Anh ta đặt cả hai
   ống nghe lên tai và lắng nghe đồng thời. Bất kỳ đường dây nào có tín hiệu đến trước (item được tạo ra),
@@ -282,34 +282,35 @@ graph TD
 
   Đây là bản chất của merge: nó "chạy đua" (races) hai luồng nguồn với nhau trong cùng một thời điểm.
 
-  2. "Ai đến trước, phục vụ trước" (First-Come, First-Served)
+## 2. "Ai đến trước, phục vụ trước" (First-Come, First-Served)
 
   Thứ tự các giá trị trong luồng merged không được sắp xếp xen kẽ (một từ `messages`, một từ `intervals`, rồi
   lại một từ `messages`...). Thay vào đó, thứ tự được quyết định hoàn toàn bởi thời gian.
 
   Hãy xem lại kết quả của bạn:
+  
+```bash
+Interval: 1   (Luồng intervals nhanh hơn)
+Message: 'a'  (Luồng messages đến kịp ngay sau đó)
+Interval: 2   (Luồng intervals lại nhanh hơn)
+Interval: 3   (Lại là intervals, vì nó đều đặn 100ms)
+Problem: ...  (Lỗi timeout từ luồng messages)
+```
 
-   1 Interval: 1   (Luồng intervals nhanh hơn)
-   2 Message: 'a'  (Luồng messages đến kịp ngay sau đó)
-   3 Interval: 2   (Luồng intervals lại nhanh hơn)
-   4 Interval: 3   (Lại là intervals, vì nó đều đặn 100ms)
-   5 Problem: ...  (Lỗi timeout từ luồng messages)
   Điều này cho thấy `intervals` có vẻ tạo ra giá trị rất nhanh và đều đặn, trong khi messages có tốc độ thất
-  thường hơn (lúc 100ms, lúc 300ms nên bị timeout). Luồng merged chỉ đơn giản là thu thập và chuyển tiếp bất
-   cứ thứ gì đến tai nó trước.
+  thường hơn (lúc 100ms, lúc 300ms nên bị timeout). Luồng merged chỉ đơn giản là thu thập và chuyển tiếp bất cứ thứ gì đến tai nó trước.
 
-  3. Cùng loại dữ liệu
+## 3. Cùng loại dữ liệu
 
   Một quy tắc quan trọng: để hợp nhất, cả hai luồng nguồn phải tạo ra cùng một "kiểu" dữ liệu. Trong mã
   của bạn, cả hai luồng sau khi biến đổi đều tạo ra `Result<String, ...>` (một chuỗi ký tự hoặc một lỗi). Vì
    chúng cùng kiểu, merge có thể hoạt động. Bạn không thể hợp nhất một luồng số nguyên với một luồng chuỗi
    ký tự một cách trực tiếp.
 
-  4. Khi nào thì kết thúc?
+## 4. Khi nào thì kết thúc?
 
   Bình thường, luồng merged chỉ kết thúc khi cả hai luồng nguồn (messages và intervals) đều đã kết thúc.
-  Tuy nhiên, trong mã của bạn có thêm `.take(20)`, nó giống như một chỉ thị cho nhân viên tổng đài: "Sau khi
-   anh xử lý đủ 20 cuộc gọi (bất kể từ đường dây nào), hãy dừng công việc và gác máy".
+  Tuy nhiên, trong mã của bạn có thêm `.take(20)`, nó giống như một chỉ thị cho nhân viên tổng đài: "Sau khi anh xử lý đủ 20 cuộc gọi (bất kể từ đường dây nào), hãy dừng công việc và gác máy".
 
   Mục đích và ứng dụng
 
@@ -368,11 +369,11 @@ graph TD
 
   Tại sao phải làm vậy?
 
-  Đây là câu hỏi quan trọng nhất. Tại sao không đặt vòng lặp tạo tin nhắn trực tiếp trong hàm
-  get_messages?
+  Đây là câu hỏi quan trọng nhất. Tại sao không đặt vòng lặp tạo tin nhắn trực tiếp trong hàm `get_messages`?
 
   Nếu bạn làm vậy, hàm get_messages sẽ phải chạy hết toàn bộ vòng lặp, tạo ra tất cả các tin nhắn, lưu chúng
   vào một danh sách, rồi mới trả về danh sách đó. Điều này có hai vấn đề lớn:
+  
    1. Làm block chương trình: Hàm sẽ bị "kẹt" lại cho đến khi tạo xong tin nhắn cuối cùng.
    2. Phá vỡ ý tưởng "dòng chảy": Bạn sẽ nhận được một hồ nước (tất cả dữ liệu cùng lúc), chứ không phải một
       dòng sông (dữ liệu đến từ từ theo thời gian).

@@ -638,6 +638,48 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="merge (hợp nhất) hoạt động các luồng stream.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-luon-lang-nghe-ca-hai-nguon-cung-luc" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Luôn lắng nghe cả hai nguồn cùng lúc
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ai-en-truoc-phuc-vu-truoc-first-come-first-served" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. "Ai đến trước, phục vụ trước" (First-Come, First-Served)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cung-loai-du-lieu" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Cùng loại dữ liệu
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-khi-nao-thi-ket-thuc" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Khi nào thì kết thúc?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -955,7 +997,7 @@
     style A1 fill:#f9f,stroke:#333,stroke-width:2px
     style A2 fill:#f9f,stroke:#333,stroke-width:2px
     style G fill:#ffc,stroke:#333,stroke-width:4px
-    style I fill:#9f9,stroke:#333,stroke-width:2px
+    style I fill:#9af9,stroke:#333,stroke-width:2px
 </code></pre>
 <h2 id="merge-hop-nhat-hoat-ong-cac-luong-stream"><code>merge</code> (hợp nhất) hoạt động các luồng <code>stream</code>.<a class="headerlink" href="#merge-hop-nhat-hoat-ong-cac-luong-stream" title="Permanent link">&para;</a></h2>
 <p>Hãy tưởng tượng merge như một nhân viên trực tổng đài đang theo dõi hai đường dây điện thoại cùng một
@@ -963,40 +1005,31 @@
    * Đường dây 1: Luồng messages.
    * Đường dây 2: Luồng intervals.</p>
 <p>Luồng được hợp nhất (<code>merged</code>) là chuỗi các cuộc gọi mà nhân viên này xử lý.</p>
-<ol>
-<li>Luôn lắng nghe cả hai nguồn cùng lúc</li>
-</ol>
+<h3 id="1-luon-lang-nghe-ca-hai-nguon-cung-luc">1. Luôn lắng nghe cả hai nguồn cùng lúc<a class="headerlink" href="#1-luon-lang-nghe-ca-hai-nguon-cung-luc" title="Permanent link">&para;</a></h3>
 <p>Nhân viên trực tổng đài không bao giờ chỉ nghe một đường dây và bỏ mặc đường dây kia. Anh ta đặt cả hai
   ống nghe lên tai và lắng nghe đồng thời. Bất kỳ đường dây nào có tín hiệu đến trước (item được tạo ra),
   anh ta sẽ xử lý ngay lập-tức.</p>
 <p>Đây là bản chất của merge: nó "chạy đua" (races) hai luồng nguồn với nhau trong cùng một thời điểm.</p>
-<ol>
-<li>"Ai đến trước, phục vụ trước" (First-Come, First-Served)</li>
-</ol>
+<h3 id="2-ai-en-truoc-phuc-vu-truoc-first-come-first-served">2. "Ai đến trước, phục vụ trước" (First-Come, First-Served)<a class="headerlink" href="#2-ai-en-truoc-phuc-vu-truoc-first-come-first-served" title="Permanent link">&para;</a></h3>
 <p>Thứ tự các giá trị trong luồng merged không được sắp xếp xen kẽ (một từ <code>messages</code>, một từ <code>intervals</code>, rồi
   lại một từ <code>messages</code>...). Thay vào đó, thứ tự được quyết định hoàn toàn bởi thời gian.</p>
 <p>Hãy xem lại kết quả của bạn:</p>
-<p>1 Interval: 1   (Luồng intervals nhanh hơn)
-   2 Message: 'a'  (Luồng messages đến kịp ngay sau đó)
-   3 Interval: 2   (Luồng intervals lại nhanh hơn)
-   4 Interval: 3   (Lại là intervals, vì nó đều đặn 100ms)
-   5 Problem: ...  (Lỗi timeout từ luồng messages)
-  Điều này cho thấy <code>intervals</code> có vẻ tạo ra giá trị rất nhanh và đều đặn, trong khi messages có tốc độ thất
-  thường hơn (lúc 100ms, lúc 300ms nên bị timeout). Luồng merged chỉ đơn giản là thu thập và chuyển tiếp bất
-   cứ thứ gì đến tai nó trước.</p>
-<ol>
-<li>Cùng loại dữ liệu</li>
-</ol>
+<div class="language-bash highlight"><span class="filename">Bash</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos="1 "></span></a>Interval:<span class="w"> </span><span class="m">1</span><span class="w">   </span><span class="o">(</span>Luồng<span class="w"> </span>intervals<span class="w"> </span>nhanh<span class="w"> </span>hơn<span class="o">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><a href="#__codelineno-5-2"><span class="linenos" data-linenos="2 "></span></a>Message:<span class="w"> </span><span class="s1">&#39;a&#39;</span><span class="w">  </span><span class="o">(</span>Luồng<span class="w"> </span>messages<span class="w"> </span>đến<span class="w"> </span>kịp<span class="w"> </span>ngay<span class="w"> </span>sau<span class="w"> </span>đó<span class="o">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3"></a><a href="#__codelineno-5-3"><span class="linenos" data-linenos="3 "></span></a>Interval:<span class="w"> </span><span class="m">2</span><span class="w">   </span><span class="o">(</span>Luồng<span class="w"> </span>intervals<span class="w"> </span>lại<span class="w"> </span>nhanh<span class="w"> </span>hơn<span class="o">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4"></a><a href="#__codelineno-5-4"><span class="linenos" data-linenos="4 "></span></a>Interval:<span class="w"> </span><span class="m">3</span><span class="w">   </span><span class="o">(</span>Lại<span class="w"> </span>là<span class="w"> </span>intervals,<span class="w"> </span>vì<span class="w"> </span>nó<span class="w"> </span>đều<span class="w"> </span>đặn<span class="w"> </span>100ms<span class="o">)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5"></a><a href="#__codelineno-5-5"><span class="linenos" data-linenos="5 "></span></a>Problem:<span class="w"> </span>...<span class="w">  </span><span class="o">(</span>Lỗi<span class="w"> </span>timeout<span class="w"> </span>từ<span class="w"> </span>luồng<span class="w"> </span>messages<span class="o">)</span>
+</span></code></pre></div>
+<p>Điều này cho thấy <code>intervals</code> có vẻ tạo ra giá trị rất nhanh và đều đặn, trong khi messages có tốc độ thất
+  thường hơn (lúc 100ms, lúc 300ms nên bị timeout). Luồng merged chỉ đơn giản là thu thập và chuyển tiếp bất cứ thứ gì đến tai nó trước.</p>
+<h3 id="3-cung-loai-du-lieu">3. Cùng loại dữ liệu<a class="headerlink" href="#3-cung-loai-du-lieu" title="Permanent link">&para;</a></h3>
 <p>Một quy tắc quan trọng: để hợp nhất, cả hai luồng nguồn phải tạo ra cùng một "kiểu" dữ liệu. Trong mã
   của bạn, cả hai luồng sau khi biến đổi đều tạo ra <code>Result&lt;String, ...&gt;</code> (một chuỗi ký tự hoặc một lỗi). Vì
    chúng cùng kiểu, merge có thể hoạt động. Bạn không thể hợp nhất một luồng số nguyên với một luồng chuỗi
    ký tự một cách trực tiếp.</p>
-<ol>
-<li>Khi nào thì kết thúc?</li>
-</ol>
+<h3 id="4-khi-nao-thi-ket-thuc">4. Khi nào thì kết thúc?<a class="headerlink" href="#4-khi-nao-thi-ket-thuc" title="Permanent link">&para;</a></h3>
 <p>Bình thường, luồng merged chỉ kết thúc khi cả hai luồng nguồn (messages và intervals) đều đã kết thúc.
-  Tuy nhiên, trong mã của bạn có thêm <code>.take(20)</code>, nó giống như một chỉ thị cho nhân viên tổng đài: "Sau khi
-   anh xử lý đủ 20 cuộc gọi (bất kể từ đường dây nào), hãy dừng công việc và gác máy".</p>
+  Tuy nhiên, trong mã của bạn có thêm <code>.take(20)</code>, nó giống như một chỉ thị cho nhân viên tổng đài: "Sau khi anh xử lý đủ 20 cuộc gọi (bất kể từ đường dây nào), hãy dừng công việc và gác máy".</p>
 <p>Mục đích và ứng dụng</p>
 <p>Tóm lại, merge là công cụ để tổng hợp các sự kiện từ nhiều nguồn không đồng bộ vào một kênh xử lý duy
   nhất. Nó cực kỳ hữu ích trong các ứng dụng thực tế, ví dụ:</p>
@@ -1050,13 +1083,14 @@
 </li>
 </ol>
 <p>Tại sao phải làm vậy?</p>
-<p>Đây là câu hỏi quan trọng nhất. Tại sao không đặt vòng lặp tạo tin nhắn trực tiếp trong hàm
-  get_messages?</p>
+<p>Đây là câu hỏi quan trọng nhất. Tại sao không đặt vòng lặp tạo tin nhắn trực tiếp trong hàm <code>get_messages</code>?</p>
 <p>Nếu bạn làm vậy, hàm get_messages sẽ phải chạy hết toàn bộ vòng lặp, tạo ra tất cả các tin nhắn, lưu chúng
-  vào một danh sách, rồi mới trả về danh sách đó. Điều này có hai vấn đề lớn:
-   1. Làm block chương trình: Hàm sẽ bị "kẹt" lại cho đến khi tạo xong tin nhắn cuối cùng.
-   2. Phá vỡ ý tưởng "dòng chảy": Bạn sẽ nhận được một hồ nước (tất cả dữ liệu cùng lúc), chứ không phải một
-      dòng sông (dữ liệu đến từ từ theo thời gian).</p>
+  vào một danh sách, rồi mới trả về danh sách đó. Điều này có hai vấn đề lớn:</p>
+<ol>
+<li>Làm block chương trình: Hàm sẽ bị "kẹt" lại cho đến khi tạo xong tin nhắn cuối cùng.</li>
+<li>Phá vỡ ý tưởng "dòng chảy": Bạn sẽ nhận được một hồ nước (tất cả dữ liệu cùng lúc), chứ không phải một
+      dòng sông (dữ liệu đến từ từ theo thời gian).</li>
+</ol>
 <p>Bằng cách sử dụng spawn_task, bạn cho phép việc sản xuất dữ liệu (chạy ngầm) và việc tiêu thụ dữ liệu
   (vòng lặp while let trong main) diễn ra song song và độc lập. Chúng chỉ giao tiếp với nhau qua một kênh.
    Điều này tạo ra một dòng chảy dữ liệu thực sự, hiệu quả và không gây tắc nghẽn.</p>
@@ -1111,15 +1145,15 @@
 </ol>
 <p>Mối liên hệ giữa hai khái niệm</p>
 <p>Bây giờ hãy kết nối chúng lại trong hàm get_messages:</p>
-<div class="language-rust highlight"><span class="filename">Rust</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><a href="#__codelineno-5-1"><span class="linenos" data-linenos="1 "></span></a><span class="w">   </span><span class="k">fn</span><span class="w"> </span><span class="nf">get_messages</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Lời hứa</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><a href="#__codelineno-5-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="w"> </span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trpl</span><span class="p">::</span><span class="n">channel</span><span class="p">();</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3"></a><a href="#__codelineno-5-3"><span class="linenos" data-linenos="3 "></span></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4"></a><a href="#__codelineno-5-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">        </span><span class="n">trpl</span><span class="p">::</span><span class="n">spawn_task</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="k">move</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5"></a><a href="#__codelineno-5-5"><span class="linenos" data-linenos="5 "></span></a><span class="w">            </span><span class="c1">// ... gửi dữ liệu vào tx ...</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6"></a><a href="#__codelineno-5-6"><span class="linenos" data-linenos="6 "></span></a><span class="w">        </span><span class="p">});</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7"></a><a href="#__codelineno-5-7"><span class="linenos" data-linenos="7 "></span></a>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8"></a><a href="#__codelineno-5-8"><span class="linenos" data-linenos="8 "></span></a><span class="w">        </span><span class="n">ReceiverStream</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="c1">// Cách thực hiện lời hứa cụ thể</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9"></a><a href="#__codelineno-5-9"><span class="linenos" data-linenos="9 "></span></a><span class="w">    </span><span class="p">}</span>
+<div class="language-rust highlight"><span class="filename">Rust</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><a href="#__codelineno-6-1"><span class="linenos" data-linenos="1 "></span></a><span class="w">   </span><span class="k">fn</span><span class="w"> </span><span class="nf">get_messages</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Lời hứa</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><a href="#__codelineno-6-2"><span class="linenos" data-linenos="2 "></span></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="w"> </span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trpl</span><span class="p">::</span><span class="n">channel</span><span class="p">();</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><a href="#__codelineno-6-3"><span class="linenos" data-linenos="3 "></span></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><a href="#__codelineno-6-4"><span class="linenos" data-linenos="4 "></span></a><span class="w">        </span><span class="n">trpl</span><span class="p">::</span><span class="n">spawn_task</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="k">move</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a><a href="#__codelineno-6-5"><span class="linenos" data-linenos="5 "></span></a><span class="w">            </span><span class="c1">// ... gửi dữ liệu vào tx ...</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a><a href="#__codelineno-6-6"><span class="linenos" data-linenos="6 "></span></a><span class="w">        </span><span class="p">});</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a><a href="#__codelineno-6-7"><span class="linenos" data-linenos="7 "></span></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a><a href="#__codelineno-6-8"><span class="linenos" data-linenos="8 "></span></a><span class="w">        </span><span class="n">ReceiverStream</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="c1">// Cách thực hiện lời hứa cụ thể</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9"></a><a href="#__codelineno-6-9"><span class="linenos" data-linenos="9 "></span></a><span class="w">    </span><span class="p">}</span>
 </span></code></pre></div>
 <ol>
 <li>Bên trong hàm, một <code>ReceiverStream</code> cụ thể được tạo ra.</li>
