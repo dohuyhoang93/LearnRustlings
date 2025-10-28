@@ -2,10 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://dohuyhoang93.github.io/LearnRustlings/</loc>
-         <lastmod>2025-07-24</lastmod>
+         <lastmod>2025-10-28</lastmod>
     </url>
     <url>
          <loc>https://dohuyhoang93.github.io/LearnRustlings/Documents/19_smart_pointers/cow1/</loc>
-         <lastmod>2025-07-24</lastmod>
+         <lastmod>2025-10-28</lastmod>
+    </url>
+    <url>
+         <loc>https://dohuyhoang93.github.io/LearnRustlings/Documents/rust_book_17_4_streams/streams/</loc>
+         <lastmod>2025-10-28</lastmod>
     </url>
 </urlset>

@@ -90,11 +90,16 @@ markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - javascripts/mermaid.mjs
 
 copyright: Copyright &copy; 2025 Do Huy Hoang
 
